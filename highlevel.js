@@ -1,10 +1,11 @@
 (function () {
-  console.log("[HL Loader] highlevel.js loaded ✅");
+  console.log("[HL Loader] 🚨 Script is loading at all");
 
   setTimeout(function () {
     const pathname = window.location.pathname;
     console.log("[HL Loader] Current path:", pathname);
 
+    // Match subaccount ID from /v2/location/{ID}
     const match = pathname.match(/\/v2\/location\/([a-zA-Z0-9]+)/);
     const subaccountId = match ? match[1] : null;
 
