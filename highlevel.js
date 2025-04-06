@@ -1,33 +1,27 @@
-document.addEventListener('DOMContentLoaded', function () {
-  console.log("[HL Debug] highlevel.js loaded ✅");
+(function () {
+  console.log("[HL Loader] highlevel.js loaded ✅");
 
-  const subaccountId = getSubaccountIdFromUrl();
-  console.log("[HL Debug] Subaccount ID detected:", subaccountId);
+  setTimeout(function () {
+    const pathname = window.location.pathname;
+    console.log("[HL Loader] Current path:", pathname);
 
-  if (!subaccountId) {
-    console.warn("[HL Debug] No subaccount ID found in URL. Script will not continue.");
-    return;
-  }
+    const match = pathname.match(/\/v2\/location\/([a-zA-Z0-9]+)/);
+    const subaccountId = match ? match[1] : null;
 
-  const subScriptUrl = `https://wrapper.idxsecure.com/${subaccountId}.js`;
-  console.log(`[HL Debug] Attempting to load subaccount script: ${subScriptUrl}`);
+    if (subaccountId) {
+      console.log("[HL Loader] Subaccount ID detected:", subaccountId);
 
-  const script = document.createElement('script');
-  script.src = subScriptUrl;
-  script.async = true;
-  script.onload = () => {
-    console.log(`[HL Debug] ✅ Loaded: ${subScriptUrl}`);
-  };
-  script.onerror = () => {
-    console.error(`[HL Debug] ❌ Failed to load: ${subScriptUrl}`);
-  };
-  document.head.appendChild(script);
+      const scriptUrl = `https://cdn.jsdelivr.net/gh/realtycandydev/subaccounts/${subaccountId}.js?bust=1`;
+      console.log("[HL Loader] Attempting to load:", scriptUrl);
 
-  // ---------- Helper ----------
-  function getSubaccountIdFromUrl() {
-    const match =
-      window.location.pathname.match(/\/accounts\/([a-zA-Z0-9]+)/) ||
-      window.location.pathname.match(/\/location\/([a-zA-Z0-9]+)/);
-    return match ? match[1] : null;
-  }
-});
+      const script = document.createElement('script');
+      script.src = scriptUrl;
+      script.async = true;
+      script.onload = () => console.log("✅ Subaccount script loaded!");
+      script.onerror = () => console.error("❌ Failed to load subaccount script.");
+      document.head.appendChild(script);
+    } else {
+      console.warn("❌ Could not extract subaccount ID.");
+    }
+  }, 1000);
+})();
